@@ -19,6 +19,7 @@
 #include <linux/bio.h>
 #include <linux/swapops.h>
 #include <linux/writeback.h>
+#include <linux/aio.h>
 #include <linux/blkdev.h>
 #include <linux/ratelimit.h>
 #include <asm/pgtable.h>
