@@ -204,7 +204,21 @@ config CPU_FREQ_DEFAULT_GOV_WHEATLEY
 	---help---
 	  Use the CPUFreq governor 'wheatley' as default.
 
+config CPU_FREQ_DEFAULT_GOV_LIONHEART
+	bool "lionheart"
+	select CPU_FREQ_GOV_LIONHEART
+	help
+	 Use the CPUFreq governor 'lionheart' as default.
+
 endchoice
+
+config CPU_FREQ_GOV_LIONHEART
+	tristate "lionheart"
+	depends on CPU_FREQ
+	help
+	 Use the CPUFreq governor 'lionheart' as default.
+
+	  If in doubt, say N.
 
 config CPU_FREQ_GOV_ABYSSPLUG
 	tristate "'abyssplug' cpufreq governor"
@@ -314,6 +328,34 @@ config CPU_FREQ_GOV_YANKACTIVE
 	  The governor is based on interactive with just different default settings
 	  and can be achieved using interactive with a script. This is added for
 	  simplification purposes for myself.
+
+config CPUFREQ_ID_PERFLOCK
+	bool "Intellidemand Performance Lock"
+	depends on CPU_FREQ_GOV_INTELLIDEMAND
+	default	n
+	help
+		Minimum CPU performance lock for Intellidemand governor
+
+config INTELLI_MAX_ACTIVE_FREQ
+	int "Max Active Freq for Intellidemand"
+	depends on CPU_FREQ_GOV_INTELLIDEMAND
+	default	1512000
+	help
+		Set default max active frequency for intellidemand
+
+config INTELLI_MAX_INACTIVE_FREQ
+	int "Max Inactive Freq for Intellidemand"
+	depends on CPU_FREQ_GOV_INTELLIDEMAND
+	default	1134000
+	help
+		Set default max inactive frequency for intellidemand
+
+config CPUFREQ_LIMIT_MAX_FREQ
+	bool "Limit Max Freq"
+	depends on CPU_FREQ_GOV_INTELLIDEMAND
+        default n
+	help
+		Limit Max Freq while screen is on for Intellidemand governor
 
 config CPU_FREQ_GOV_NIGHTMARE
 	tristate "'nightmare' cpufreq governor"
