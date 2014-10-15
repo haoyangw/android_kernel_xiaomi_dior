@@ -101,34 +101,29 @@ static int try_to_freeze_tasks(bool user_only)
 		 * and caller must call thaw_processes() if something fails),
 		 * but it cleans up leftover PF_FREEZE requests.
 		 */
-		if(wakeup) {
-			printk("\n");
-			printk(KERN_ERR "Freezing of %s aborted\n",
-					user_only ? "user space " : "tasks ");
-		}
-		else {
-			printk("\n");
-			printk(KERN_ERR "Freezing of tasks %s after %d.%03d seconds "
-			       "(%d tasks refusing to freeze, wq_busy=%d):\n",
-			       wakeup ? "aborted" : "failed",
-			       elapsed_msecs / 1000, elapsed_msecs % 1000,
-			       todo - wq_busy, wq_busy);
-		}
+		if (wakeup) {
+		printk("\n");
+		printk(KERN_ERR "Freezing of tasks aborted after %d.%03d seconds",
+		       elapsed_msecs / 1000, elapsed_msecs % 1000);
+	} else if (todo) {
+		printk("\n");
+		printk(KERN_ERR "Freezing of tasks failed after %d.%03d seconds"
+		       " (%d tasks refusing to freeze, wq_busy=%d):\n",
+		       elapsed_msecs / 1000, elapsed_msecs % 1000,
+		       todo - wq_busy, wq_busy);
 
-		if (!wakeup) {
-			read_lock(&tasklist_lock);
-			do_each_thread(g, p) {
-				if (p != current && !freezer_should_skip(p)
-				    && freezing(p) && !frozen(p) &&
-				    elapsed_csecs > 100)
-					sched_show_task(p);
-			} while_each_thread(g, p);
-			read_unlock(&tasklist_lock);
-		}
+		read_lock(&tasklist_lock);
+		do_each_thread(g, p) {
+			if (p != current && !freezer_should_skip(p)
+			    && freezing(p) && !frozen(p))
+				sched_show_task(p);
+		} while_each_thread(g, p);
+		read_unlock(&tasklist_lock);
 	} else {
 		printk("(elapsed %d.%03d seconds) ", elapsed_msecs / 1000,
 			elapsed_msecs % 1000);
 	}
+
 
 	return todo ? -EBUSY : 0;
 }
