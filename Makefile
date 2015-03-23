@@ -243,10 +243,10 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
-HOSTCC       = gcc
-HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
-HOSTCXXFLAGS = -O2
+HOSTCC = gcc
+HOSTCXX = g++
+HOSTCFLAGS = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -fgcse-las -Wno-unused-parameter -Wno-sign-compare -Wno-missing-field-initializers -Wno-unused-variable -Wno-unused-value -floop-nest-optimize -fgraphite -fgraphite-identity -pipe -DNDEBUG
+HOSTCXXFLAGS = -O3 -fgcse-las -fgraphite -fgraphite-identity -pipe -DNDEBUG
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -347,15 +347,17 @@ CHECK		= sparse
 
 # Use the wrapper for the compiler.  This wrapper scans for new
 # warnings and causes the build to stop upon encountering them.
-CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
+# CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 
-CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
-		  -Wbitwise -Wno-return-void $(CF)
-CFLAGS_MODULE   =
-AFLAGS_MODULE   =
-LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
-AFLAGS_KERNEL	=
+CHECKFLAGS := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
+-Wbitwise -Wno-return-void $(CF)
+KERNELFLAGS = -O3 -munaligned-access -fgcse-sm -fgcse-las -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -ftree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited -fgraphite -fgraphite-identity -floop-nest-optimize -ftree-loop-linear -frename-registers -std=gnu89 -pipe -DNDEBUG
+MODFLAGS	= -DMODULE $(KERNELFLAGS)
+CFLAGS_MODULE = $(MODFLAGS)
+AFLAGS_MODULE = $(MODFLAGS)
+LDFLAGS_MODULE = -T $(srctree)/scripts/module-common.lds
+CFLAGS_KERNEL	= $(KERNELFLAGS)
+AFLAGS_KERNEL	= $(KERNELFLAGS)
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 
