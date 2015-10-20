@@ -7896,11 +7896,10 @@ int wlan_hdd_cfg80211_send_tdls_discover_req(struct wiphy *wiphy,
 #if TDLS_MGMT_VERSION2
     return wlan_hdd_cfg80211_tdls_mgmt(wiphy, dev, peer,
                             WLAN_TDLS_DISCOVERY_REQUEST, 1, 0, 0, NULL, 0);
-#endif
 #else
-
     return wlan_hdd_cfg80211_tdls_mgmt(wiphy, dev, peer,
                             WLAN_TDLS_DISCOVERY_REQUEST, 1, 0, NULL, 0);
+#endif
 }
 #endif
 
