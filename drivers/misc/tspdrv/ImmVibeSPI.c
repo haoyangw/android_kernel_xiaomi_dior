@@ -230,8 +230,8 @@ static ssize_t vibrator_amp_store(struct device *dev,
 
     if(gain>100)
         gain=100;
-    else if(gain<10)
-        gain=10;
+    else if(gain<50)
+        gain=50;
 
     pwm_duty = gain;
 
