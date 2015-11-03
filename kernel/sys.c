@@ -2128,7 +2128,6 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 		case PR_SET_VMA:
 			error = prctl_set_vma(arg2, arg3, arg4, arg5);
 			break;
-<<<<<<< HEAD
 		case PR_SET_TIMERSLACK_PID:
 			if (task_pid_vnr(current) != (pid_t)arg3 &&
 					!capable(CAP_SYS_NICE))
@@ -2149,8 +2148,6 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 			put_task_struct(tsk);
 			error = 0;
 			break;
-=======
->>>>>>> a9e6b18... mm: add a field to store names for private anonymous memory
 		default:
 			error = -EINVAL;
 			break;
