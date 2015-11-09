@@ -824,13 +824,13 @@ static void smartass_late_resume(struct early_suspend *handler) {
 		smartass_suspend(i,0);
 }
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
 static struct early_suspend smartass_power_suspend = {
 	.suspend = smartass_early_suspend,
 	.resume = smartass_late_resume,
-#ifdef CONFIG_MACH_HERO
 	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 1,
-#endif
 };
+#endif
 
 static int __init cpufreq_smartass_init(void)
 {
@@ -878,7 +878,9 @@ static int __init cpufreq_smartass_init(void)
 
 	INIT_WORK(&freq_scale_work, cpufreq_smartass_freq_change_time_work);
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
 	register_early_suspend(&smartass_power_suspend);
+#endif
 
 	return cpufreq_register_governor(&cpufreq_gov_smartass_h3);
 }
