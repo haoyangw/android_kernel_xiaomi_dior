@@ -878,13 +878,13 @@ static void asswax_late_resume(struct early_suspend *handler) {
 		asswax_suspend(i,1);
 }
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
 static struct early_suspend asswax_power_suspend = {
 	.suspend = asswax_early_suspend,
 	.resume = asswax_late_resume,
-#ifdef CONFIG_MACH_HERO
 	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 1,
-#endif
 };
+#endif
 
 static int __init cpufreq_asswax_init(void)
 {
@@ -919,7 +919,9 @@ static int __init cpufreq_asswax_init(void)
 
 	INIT_WORK(&freq_scale_work, cpufreq_asswax_freq_change_time_work);
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
 	register_early_suspend(&asswax_power_suspend);
+#endif
 
 	return cpufreq_register_governor(&cpufreq_gov_asswax);
 }
