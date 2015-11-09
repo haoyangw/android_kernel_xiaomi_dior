@@ -1824,6 +1824,56 @@ static struct vfsmount *fs_set_subtype(struct vfsmount *mnt, const char *fstype)
 /*
  * add a mount into a namespace's mount tree
  */
+/*static int do_add_mount(struct mount *newmnt, struct path *path, int mnt_flags)
+{
+	int err;
+
+	mnt_flags &= ~(MNT_SHARED | MNT_WRITE_HOLD | MNT_INTERNAL);
+
+	err = lock_mount(path);
+	if (err)
+		return err;
+
+	err = -EINVAL;
+	if (!(mnt_flags & MNT_SHRINKABLE) && !check_mnt(real_mount(path->mnt)))
+		goto unlock;
+
+	// Refuse the same filesystem on the same mount point
+	err = -EBUSY;
+	if (path->mnt->mnt_sb == newmnt->mnt.mnt_sb &&
+	    path->mnt->mnt_root == path->dentry)
+		goto unlock;
+
+	err = -EINVAL;
+	if (S_ISLNK(newmnt->mnt.mnt_root->d_inode->i_mode))
+		goto unlock;
+
+	newmnt->mnt.mnt_flags = mnt_flags;
+	err = graft_tree(newmnt, path);
+
+unlock:
+	unlock_mount(path);
+	return err;
+}*/
+
+static struct vfsmount *
+do_kern_mount(const char *fstype, int flags, const char *name, void *data)
+{
+	struct file_system_type *type = get_fs_type(fstype);
+	struct vfsmount *mnt;
+	if (!type)
+		return ERR_PTR(-ENODEV);
+	mnt = vfs_kern_mount(type, flags, name, data);
+	if (!IS_ERR(mnt) && (type->fs_flags & FS_HAS_SUBTYPE) &&
+	    !mnt->mnt_sb->s_subtype)
+		mnt = fs_set_subtype(mnt, fstype);
+	put_filesystem(type);
+	return mnt;
+}
+
+/*
+ * add a mount into a namespace's mount tree
+ */
 static int do_add_mount(struct mount *newmnt, struct path *path, int mnt_flags)
 {
 	int err;
@@ -1860,7 +1910,29 @@ unlock:
  * create a new mount for userspace and request it to be added into the
  * namespace's tree
  */
-static int do_new_mount(struct path *path, const char *fstype, int flags,
+static int do_new_mount(struct path *path, char *type, int flags,
+			int mnt_flags, char *name, void *data)
+{
+	struct vfsmount *mnt;
+	int err;
+
+	if (!type)
+		return -EINVAL;
+
+	/* we need capabilities... */
+	if (!capable(CAP_SYS_ADMIN))
+		return -EPERM;
+
+	mnt = do_kern_mount(type, flags, name, data);
+	if (IS_ERR(mnt))
+		return PTR_ERR(mnt);
+
+	err = do_add_mount(real_mount(mnt), path, mnt_flags);
+	if (err)
+		mntput(mnt);
+	return err;
+}
+/*static int do_new_mount(struct path *path, const char *fstype, int flags,
 			int mnt_flags, char *name, void *data)
 {
 	struct file_system_type *type;
@@ -1871,7 +1943,7 @@ static int do_new_mount(struct path *path, const char *fstype, int flags,
 	if (!fstype)
 		return -EINVAL;
 
-	/* we need capabilities... */
+	// we need capabilities... 
 	user_ns = real_mount(path->mnt)->mnt_ns->user_ns;
 	if (!ns_capable(user_ns, CAP_SYS_ADMIN))
 		return -EPERM;
@@ -1885,9 +1957,9 @@ static int do_new_mount(struct path *path, const char *fstype, int flags,
 			put_filesystem(type);
 			return -EPERM;
 		}
-		/* Only in special cases allow devices from mounts
-		 * created outside the initial user namespace.
-		 */
+		 //Only in special cases allow devices from mounts
+		 // created outside the initial user namespace.
+		 //
 		if (!(type->fs_flags & FS_USERNS_DEV_MOUNT)) {
 			flags |= MS_NODEV;
 			mnt_flags |= MNT_NODEV;
@@ -1914,7 +1986,7 @@ static int do_new_mount(struct path *path, const char *fstype, int flags,
                 mnt->mnt_sb->fsync_flags |= FLAG_ASYNC_FSYNC;
 #endif
 	return err;
-}
+}*/
 
 int finish_automount(struct vfsmount *m, struct path *path)
 {
