@@ -116,7 +116,7 @@ static void __ref hotplug_work_fn(struct work_struct *work)
 			unsigned int cur_freq = 0;
 			int ret;
 
-			cur_idle_time = get_cpu_idle_time(
+			cur_idle_time = get_cpu_idle_time_new(
 					cpu, &cur_wall_time,
 					0);
 
@@ -312,7 +312,7 @@ static int alucard_hotplug_callback(struct notifier_block *nb,
 	switch (action) {
 	case CPU_ONLINE:
 		pcpu_info = &per_cpu(od_hotplug_cpuinfo, cpu);
-		pcpu_info->prev_cpu_idle = get_cpu_idle_time(cpu,
+		pcpu_info->prev_cpu_idle = get_cpu_idle_time_new(cpu,
 				&pcpu_info->prev_cpu_wall,
 				0);
 		break;
@@ -348,7 +348,7 @@ static void hotplug_start(void)
 		struct hotplug_cpuinfo *pcpu_info =
 				&per_cpu(od_hotplug_cpuinfo, cpu);
 
-		pcpu_info->prev_cpu_idle = get_cpu_idle_time(cpu,
+		pcpu_info->prev_cpu_idle = get_cpu_idle_time_new(cpu,
 				&pcpu_info->prev_cpu_wall,
 				0);
 		pcpu_info->cur_up_rate = 1;
