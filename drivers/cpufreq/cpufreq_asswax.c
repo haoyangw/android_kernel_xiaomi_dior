@@ -829,6 +829,7 @@ static int cpufreq_governor_asswax(struct cpufreq_policy *new_policy,
 	return 0;
 }
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
 static void asswax_suspend(int cpu, int suspend)
 {
 	struct asswax_info_s *this_asswax = &per_cpu(asswax_info, smp_processor_id());
@@ -878,7 +879,6 @@ static void asswax_late_resume(struct early_suspend *handler) {
 		asswax_suspend(i,1);
 }
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
 static struct early_suspend asswax_power_suspend = {
 	.suspend = asswax_early_suspend,
 	.resume = asswax_late_resume,

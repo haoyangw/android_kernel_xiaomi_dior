@@ -9,6 +9,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
 */
+// Dummy file placed here to allow adaptive governor to compile :/
 
 #ifndef __ASM_ARCH_PPMU_H
 #define __ASM_ARCH_PPMU_H __FILE__
@@ -63,7 +64,7 @@ enum ppmu_ch {
 	DMC1,
 };
 
-/*enum exynos4_ppmu {
+enum msm_ppmu {
 	PPMU_DMC0,
 	PPMU_DMC1,
 	PPMU_CPU,
@@ -71,12 +72,12 @@ enum ppmu_ch {
 	PPMU_DDR_R1,
 	PPMU_DDR_L,
 	PPMU_END,
-};*/
+};
 
 extern unsigned long long ppmu_load[PPMU_END];
 extern unsigned long long ppmu_load_detail[2][PPMU_END];
 
-/*struct exynos4_ppmu_hw {
+struct msm_ppmu_hw {
 	struct list_head node;
 	void __iomem *hw_base;
 	unsigned int ccnt;
@@ -89,25 +90,26 @@ extern unsigned long long ppmu_load_detail[2][PPMU_END];
 	unsigned int count[NUMBER_OF_COUNTER];
 };
 
+/*
 void exynos4_ppc_reset(struct exynos4_ppmu_hw *ppmu);
 void exynos4_ppc_start(struct exynos4_ppmu_hw *ppmu);
 void exynos4_ppc_stop(struct exynos4_ppmu_hw *ppmu);
 void exynos4_ppc_setevent(struct exynos4_ppmu_hw *ppmu,
 				  unsigned int evt_num);
-unsigned long long exynos4_ppc_update(struct exynos4_ppmu_hw *ppmu);
+unsigned long long exynos4_ppc_update(struct exynos4_ppmu_hw *ppmu);*/
 
-void exynos4_ppmu_reset(struct exynos4_ppmu_hw *ppmu);
-void exynos4_ppmu_start(struct exynos4_ppmu_hw *ppmu);
-void exynos4_ppmu_stop(struct exynos4_ppmu_hw *ppmu);
-void exynos4_ppmu_setevent(struct exynos4_ppmu_hw *ppmu,
+void msm_ppmu_reset(struct msm_ppmu_hw *ppmu);
+void msm_ppmu_start(struct msm_ppmu_hw *ppmu);
+void msm_ppmu_stop(struct msm_ppmu_hw *ppmu);
+void msm_ppmu_setevent(struct msm_ppmu_hw *ppmu,
 				   unsigned int evt_num);
-unsigned long long exynos4_ppmu_update(struct exynos4_ppmu_hw *ppmu, int ch);*/
+unsigned long long msm_ppmu_update(struct msm_ppmu_hw *ppmu, int ch);
 
-//void ppmu_init(struct exynos4_ppmu_hw *ppmu, struct device *dev);
+void ppmu_init(struct msm_ppmu_hw *ppmu, struct device *dev);
 void ppmu_start(struct device *dev);
 void ppmu_update(struct device *dev, int ch);
 void ppmu_reset(struct device *dev);
 
-//extern struct exynos4_ppmu_hw exynos_ppmu[];
+extern struct msm_ppmu_hw msm_ppmu[];
 #endif /* __ASM_ARCH_PPMU_H */
 
