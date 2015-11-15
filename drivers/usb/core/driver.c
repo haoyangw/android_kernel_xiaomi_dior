@@ -1016,57 +1016,6 @@ static void do_rebind_interfaces(struct usb_device *udev)
 		}
 	}
 }
-  
-#define DO_UNBIND       0
-#define DO_REBIND       1
- 
-/* Unbind drivers for @udev's interfaces that don't support suspend/resume,
- * or rebind interfaces that have been unbound, according to @action.
- *
- * The caller must hold @udev's device lock.
- * FIXME: For rebinds, the caller must block system sleep transitions.
- */
-static void do_unbind_rebind(struct usb_device *udev, int action)
-{
-        struct usb_host_config  *config;
-        int                     i;
-        struct usb_interface    *intf;
-        struct usb_driver       *drv;
-
-        config = udev->actconfig;
-        if (config) {
-                for (i = 0; i < config->desc.bNumInterfaces; ++i) {
-                        intf = config->interface[i];
-                        switch (action) {
-                        case DO_UNBIND:
-                                if (intf->dev.driver) {
-                                        drv = to_usb_driver(intf->dev.driver);
-                                        if (!drv->suspend || !drv->resume)
-                                                usb_forced_unbind_intf(intf);
-                                }
-                                break;
-                        case DO_REBIND:
-                                if (intf->needs_binding) {
-  
-        /* FIXME: The next line is needed because we are going to probe
-         * the interface, but as far as the PM core is concerned the
-         * interface is still suspended.  The problem wouldn't exist
-         * if we could rebind the interface during the interface's own
-         * resume() call, but at the time the usb_device isn't locked!
-         *
-         * The real solution will be to carry this out during the device's
-         * complete() callback.  Until that is implemented, we have to
-         * use this hack.
-         */
-//                                      intf->dev.power.sleeping = 0;
-
-                                        usb_rebind_intf(intf);
-                                }
-                                break;
-                        }
-                }
-        }
-}
 
 static int usb_suspend_device(struct usb_device *udev, pm_message_t msg)
 {
@@ -1860,3 +1809,4 @@ struct bus_type usb_bus_type = {
 	.match =	usb_device_match,
 	.uevent =	usb_uevent,
 };
+
