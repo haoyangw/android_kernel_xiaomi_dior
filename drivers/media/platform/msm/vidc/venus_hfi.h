@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -151,6 +151,7 @@ struct hal_data {
 };
 
 enum vidc_clocks {
+	VCODEC_NONE,
 	VCODEC_CLK,
 	VCODEC_AHB_CLK,
 	VCODEC_AXI_CLK,
@@ -183,6 +184,11 @@ struct venus_resources {
 	struct on_chip_mem ocmem;
 };
 
+enum venus_hfi_state {
+	VENUS_STATE_DEINIT = 1,
+	VENUS_STATE_INIT,
+};
+
 struct venus_hfi_device {
 	struct list_head list;
 	struct list_head sess_head;
@@ -190,7 +196,6 @@ struct venus_hfi_device {
 	u32 device_id;
 	u32 clk_load;
 	u32 bus_load[MSM_VIDC_MAX_DEVICES];
-	unsigned long ocmem_size;
 	enum clock_state clk_state;
 	bool power_enabled;
 	enum vidc_clocks clk_gating_level;
@@ -210,6 +215,7 @@ struct venus_hfi_device {
 	struct workqueue_struct *venus_pm_workq;
 	int spur_count;
 	int reg_count;
+	int pc_num_cmds;
 	u32 base_addr;
 	u32 register_base;
 	u32 register_size;
@@ -219,6 +225,7 @@ struct venus_hfi_device {
 	struct venus_resources resources;
 	struct msm_vidc_platform_resources *res;
 	struct regulator *gdsc;
+	enum venus_hfi_state state;
 };
 
 void venus_hfi_delete_device(void *device);
