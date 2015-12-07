@@ -1868,7 +1868,7 @@ unlock:
  * namespace's tree
  */
 static int do_new_mount(struct path *path, const char *fstype, int flags,
-			int mnt_flags, char *name, void *data)
+			int mnt_flags, const char *name, void *data)
 {
 	struct file_system_type *type;
 	struct user_namespace *user_ns;
