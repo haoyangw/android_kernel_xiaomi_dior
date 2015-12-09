@@ -37,6 +37,10 @@
 #include <linux/input/doubletap2wake.h>
 #endif
 
+#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+#include <linux/input/doubletap2wake.h>
+#endif
+
 //register address
 #define FT5X0X_REG_DEVIDE_MODE	0x00
 #define FT5X0X_REG_ROW_ADDR		0x01
