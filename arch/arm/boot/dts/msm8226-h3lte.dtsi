@@ -264,6 +264,11 @@
 
 };
 
+	qcom,bam_dmux@fc834000 {
+		qcom,fast-shutdown;
+	};
+
+
 &usb_otg {
 	#address-cells = <0>;
         interrupt-parent = <&usb_otg>;
