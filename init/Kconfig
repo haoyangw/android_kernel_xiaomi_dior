@@ -955,8 +955,7 @@ source "usr/Kconfig"
 endif
 
 choice
-    prompt "Optimization level
-(-Os, -O2, -O3, -Ofast)"
+    prompt "Optimization level(-Os, -O2, -O3, -Ofast)"
     default CC_OPTIMIZE_DEFAULT
 
 config CC_OPTIMIZE_FOR_SIZE
