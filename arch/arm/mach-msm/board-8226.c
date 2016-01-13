@@ -206,7 +206,11 @@ void __init msm8226_add_drivers(void)
 	fan53555_regulator_init();
 	cpr_regulator_init();
 	tsens_tm_init_driver();
+#ifdef CONFIG_INTELLI_THERMAL
+        msm_thermal_init(NULL);
+#else
 	msm_thermal_device_init();
+#endif
 #ifdef CONFIG_ANDROID_RAM_CONSOLE
 	ram_console_debug_init();
 #endif
