@@ -1705,7 +1705,7 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, int, op, int, fd,
 	/* The target file descriptor must support poll */
 	error = -EPERM;
 	if (!tfile->f_op || !tfile->f_op->poll)
-		epds.events &= ~EPOLLWAKEUP;
+		goto error_tgt_fput;
 
 	/*
 	 * We have to check that the file structure underneath the file descriptor
