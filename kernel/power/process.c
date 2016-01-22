@@ -94,13 +94,6 @@ static int try_to_freeze_tasks(bool user_only)
 	elapsed_msecs64 = timeval_to_ns(&end) - timeval_to_ns(&start);
 	do_div(elapsed_msecs64, NSEC_PER_MSEC);
 	elapsed_msecs = elapsed_msecs64;
-
-	if (todo) {
-		/* This does not unfreeze processes that are already frozen
-		 * (we have slightly ugly calling convention in that respect,
-		 * and caller must call thaw_processes() if something fails),
-		 * but it cleans up leftover PF_FREEZE requests.
-		 */
 		if (wakeup) {
 		printk("\n");
 		printk(KERN_ERR "Freezing of tasks aborted after %d.%03d seconds",
