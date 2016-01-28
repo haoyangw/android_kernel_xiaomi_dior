@@ -24,12 +24,20 @@
 #include <linux/err.h>
 #include <linux/backlight.h>
 #include <linux/mfd/lm3533.h>
+#include <linux/display_state.h>
 
 #include "mdss_dsi.h"
 
 #define DT_CMD_HDR 6
 
 DEFINE_LED_TRIGGER(bl_led_trigger);
+
+bool display_on = true;
+
+bool is_display_on()
+{
+	return display_on;
+}
 
 void mdss_dsi_panel_pwm_cfg(struct mdss_dsi_ctrl_pdata *ctrl)
 {
@@ -298,6 +306,8 @@ static int mdss_dsi_panel_partial_update(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
+	display_on = true;
+
 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 	mipi  = &pdata->panel_info.mipi;
@@ -550,6 +560,9 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->off_cmds);
 
 	pr_info("%s:-\n", __func__);
+
+	display_on = false;
+
 	return 0;
 }
 
