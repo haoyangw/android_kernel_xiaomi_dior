@@ -112,30 +112,6 @@ static void dyn_fsync_force_flush(void)
 	sync_filesystems(1);
 }
 
-static void dyn_fsync_early_suspend(struct early_suspend *h)
-{
-	mutex_lock(&fsync_mutex);
-	if (dyn_fsync_active) {
-		early_suspend_active = true;
-		dyn_fsync_force_flush();
-	}
-	mutex_unlock(&fsync_mutex);
-}
-
-static void dyn_fsync_late_resume(struct early_suspend *h)
-{
-	mutex_lock(&fsync_mutex);
-	early_suspend_active = false;
-	mutex_unlock(&fsync_mutex);
-}
-
-static struct early_suspend dyn_fsync_early_suspend_handler = 
-	{
-		.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN,
-		.suspend = dyn_fsync_early_suspend,
-		.resume = dyn_fsync_late_resume,
-	};
-
 static int dyn_fsync_panic_event(struct notifier_block *this,
 		unsigned long event, void *ptr)
 {
