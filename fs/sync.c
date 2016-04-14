@@ -218,15 +218,6 @@ SYSCALL_DEFINE1(syncfs, int, fd)
  */
 int vfs_fsync_range(struct file *file, loff_t start, loff_t end, int datasync)
 {
-<<<<<<< HEAD
-#ifdef CONFIG_DYNAMIC_FSYNC
-
-	if (likely(dyn_fsync_active && !early_suspend_active)
-		return 0;
-	else {
-#endif	
-=======
->>>>>>> parent of 1660c55... fs: add dynamic fsync control
 	if (!file->f_op || !file->f_op->fsync)
 		return -EINVAL;
 	return file->f_op->fsync(file, start, end, datasync);
@@ -262,27 +253,11 @@ static int do_fsync(unsigned int fd, int datasync)
 
 SYSCALL_DEFINE1(fsync, unsigned int, fd)
 {
-<<<<<<< HEAD
-#ifdef CONFIG_DYNAMIC_FSYNC
-	if (likely(dyn_fsync_active && !early_suspend_active)
-		return 0;
-	else
-#endif
-=======
->>>>>>> parent of 1660c55... fs: add dynamic fsync control
 	return do_fsync(fd, 0);
 }
 
 SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
 {
-<<<<<<< HEAD
-#ifdef CONFIG_DYNAMIC_FSYNC
-	if (likely(dyn_fsync_active && !early_suspend_active)
-		return 0;
-	else
-#endif
-=======
->>>>>>> parent of 1660c55... fs: add dynamic fsync control
 	return do_fsync(fd, 1);
 }
 
@@ -353,14 +328,6 @@ EXPORT_SYMBOL(generic_write_sync);
 SYSCALL_DEFINE(sync_file_range)(int fd, loff_t offset, loff_t nbytes,
 				unsigned int flags)
 {
-<<<<<<< HEAD
-#ifdef CONFIG_DYNAMIC_FSYNC
-	if (likely(dyn_fsync_active && !early_suspend_active)
-		return 0;
-	else {
-#endif
-=======
->>>>>>> parent of 1660c55... fs: add dynamic fsync control
 	int ret;
 	struct file *file;
 	struct address_space *mapping;
@@ -456,14 +423,6 @@ SYSCALL_ALIAS(sys_sync_file_range, SyS_sync_file_range);
 SYSCALL_DEFINE(sync_file_range2)(int fd, unsigned int flags,
 				 loff_t offset, loff_t nbytes)
 {
-<<<<<<< HEAD
-#ifdef CONFIG_DYNAMIC_FSYNC
-	if (likely(dyn_fsync_active && !early_suspend_active)
-		return 0;
-	else
-#endif
-=======
->>>>>>> parent of 1660c55... fs: add dynamic fsync control
 	return sys_sync_file_range(fd, offset, nbytes, flags);
 }
 #ifdef CONFIG_HAVE_SYSCALL_WRAPPERS
