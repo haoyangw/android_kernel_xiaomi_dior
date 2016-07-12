@@ -25,75 +25,6 @@
 	};
 
 	i2c@f9927000 { /* BLSP1 QUP5 */
-		synaptics@20 {
-			compatible = "synaptics,rmi4";
-			reg = <0x20>;
-			interrupt-parent = <&msmgpio>;
-			interrupts = <17 0x2008>;
-			vdd-supply = <&pm8226_l19>;
-			vcc_i2c-supply = <&pm8226_lvs1>;
-			synaptics,reset-gpio = <&msmgpio 16 0x00>;
-			synaptics,irq-gpio = <&msmgpio 17 0x2008>;
-			synaptics,button-map = <139 102 158>;
-			synaptics,fw-image-name = "PR1468813.img";
-			synaptics,i2c-pull-up;
-			synaptics,power-down;
-			synaptics,disable-gpios;
-		};
-
-		ist30xx@50 {
-			compatible = "ist30xx";
-			reg = <0x50>;
-			interrupt-parent = <&msmgpio>;
-			interrupts = <17 0x2008>;
-			vdd-supply = <&pm8226_l19>;
-			vcc_i2c-supply = <&pm8226_lvs1>;
-			ist30xx,i2c-pull-up;
-			ist30xx,irqflags = <0x2>;
-			ist30xx,irq-gpio = <&msmgpio 17 0x00>;
-			ist30xx,reset-gpio = <&msmgpio 16 0x00>;
-			ist30xx,max-x = <720>;
-			ist30xx,max-y = <1280>;
-			ist30xx,max-w = <200>;
-			ist30xx,config-array-size = <1>;
-			ist30xx,key-num = <3>;
-			ist30xx,cfg_0 {
-				ist30xx,tsp-type = <0x0f>;
-				ist30xx,tsp-name = "WINTEK";
-				ist30xx,key-code = <158 102 139>;
-				ist30xx,cmcs-name = "ist30xx_wintek.cms";
-				ist30xx,fw-name = "ist30xx_wintek.fw";
-			};
-		};
-
-		atmel_mxt_ts@4a {
-			compatible = "atmel,mxt-ts";
-			reg = <0x4a>;
-			interrupt-parent = <&msmgpio>;
-			interrupts = <17 0x2>;
-			vdd-supply = <&pm8226_l19>;
-			atmel,i2c-pull-up;
-			atmel,irqflags = <0x2008>;
-			atmel,reset-gpio = <&msmgpio 16 0x00>;
-			atmel,irq-gpio = <&msmgpio 17 0x00>;
-			atmel,mxt-fw-name = "mxT336SC21.fw";
-			atmel,gpio-mask = <0x0C>;
-			atmel,rx-num = <13>;
-			atmel,tx-num = <24>;
-			atmel,config-array-size = <1>;
-			atmel,cfg_1 {
-				atmel,family-id = <0x82>;
-				atmel,variant-id = <0x23>;
-				atmel,version = <0x21>;
-				atmel,build = <0xAA>;
-				atmel,mxt-cfg-name = "mxt_336s_config.fw";
-				atmel,vendor-id = <0x0C>;
-				atmel,key-codes = <139 102 158>;
-				atmel,key-num = <3>;
-				atmel,mult-no-touch-threshold = <70>;
-			};
-		};
-
 		atmel_mxt_ts@4b {
 			compatible = "atmel,mxt-ts";
 			reg = <0x4b>;
@@ -132,42 +63,6 @@
 				atmel,key-codes = <139 102 158>;
 				atmel,key-num = <3>;
 				atmel,mult-no-touch-threshold = <70>;
-			};
-		};
-
-		ft5x06_i2c@38 {
-			compatible = "ft,ft5x06_i2c";
-			reg = <0x38>;
-			interrupt-parent = <&msmgpio>;
-			interupts = <17 0x2>;
-			vdd-supply = <&pm8226_l19>;
-			vcc_i2c-supply = <&pm8226_lvs1>;
-			ft5x06_i2c,i2c-pull-up;
-			ft5x06_i2c,irqflags = <0x2008>;
-			ft5x06_i2c,x-max = <720>;
-			ft5x06_i2c,y-max = <1280>;
-			ft5x06_i2c,z-max = <255>;
-			ft5x06_i2c,w-max = <200>;
-			ft5x06_i2c,irq-gpio = <&msmgpio 17 0x00>;
-			ft5x06_i2c,reset-gpio = <&msmgpio 16 0x00>;
-			ft5x06_i2c,landing-jiffies = <1000>;
-			ft5x06_i2c,landing-threshold = <16>;
-			ft5x06_i2c,staying-threshold = <8>;
-			ft5x06_i2c,raw-min = <7000>;
-			ft5x06_i2c,raw-max = <10000>;
-			ft5x06_i2c,firmware-array-size = <1>;
-			ft5x06_i2c,cfg_0 {
-				ft5x06_i2c,chip = <0x14>;
-				ft5x06_i2c,vendor = <0x3B>;
-				ft5x06_i2c,fw-name = "ft5336_firmware.fw";
-				ft5x06_i2c,key-menu = <115 1317 10 50>;
-				ft5x06_i2c,key-home = <355 1317 10 50>;
-				ft5x06_i2c,key-back = <595 1317 10 50>;
-				ft5x06_i2c,key-length = <3>;
-				ft5x06_i2c,key-map = <139 102 158>;
-				ft5x06_i2c,key-pos = <2 6 10>;
-				ft5x06_i2c,tx-num = <24>;
-				ft5x06_i2c,rx-num = <13>;
 			};
 		};
 	};
