@@ -67,6 +67,13 @@ arch/*/include/generated
 # stgit generated dirs
 patches-*
 
+# Linux kernel patches
+patch-*
+*.patch
+
+# WHY's habits
+*.txt
+
 # quilt's files
 patches
 series
