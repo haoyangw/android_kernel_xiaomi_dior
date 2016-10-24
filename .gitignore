@@ -71,6 +71,9 @@ patches-*
 patch-*
 *.patch
 
+# menuconfig
+*defconfig
+
 # WHY's habits
 *.txt
 
